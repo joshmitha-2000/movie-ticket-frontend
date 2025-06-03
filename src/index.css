@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+body, html, #root {
+    background-color: #1a202c; /* Tailwind's bg-gray-900 hex */
+    min-height: 100vh;
+    margin: 0;
+  }
+  
