@@ -1,26 +1,38 @@
-// src/components/Header.tsx
-import { Bell, Search, UserCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Bell, UserCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
-  return (
-    <header className="w-full bg-gray-900 border-b border-gray-700 px-4 py-3 flex flex-col sm:flex-row items-center justify-between text-white gap-3 sm:gap-0">
-      
-      {/* Search Bar */}
-      <div className="flex items-center w-full sm:max-w-md">
-        <div className="relative w-full">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-            <Search className="w-4 h-4" />
-          </span>
-          <input
-            type="text"
-            placeholder="Search movies, theaters..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
-          />
-        </div>
-      </div>
+  const navigate=useNavigate()
+  const [showMenu, setShowMenu] = useState(false);
+  const dropdownRef = useRef(null);
 
-      {/* Right side icons */}
-      <div className="flex items-center gap-6">
+  const user = {
+    name: "Admin",
+    email: "admin@example.com",
+  };
+
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setShowMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    // You can add toast or navigate to login here
+    navigate("/");
+  };
+
+  return (
+    <header className="w-full bg-gray-900 border-b border-gray-700 px-4 py-3 flex items-center justify-between text-white">
+      <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
+
+      <div className="flex items-center gap-6 relative">
         <button
           className="text-gray-400 hover:text-red-500 transition"
           aria-label="Notifications"
@@ -28,13 +40,34 @@ export function Header() {
           <Bell className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2 cursor-pointer select-none">
+        <div
+          className="flex items-center gap-2 cursor-pointer select-none"
+          onClick={() => setShowMenu((prev) => !prev)}
+        >
           <UserCircle className="w-6 h-6 text-red-600" />
           <span className="hidden sm:block text-sm font-semibold text-gray-300">
             Admin
           </span>
         </div>
+
+        {showMenu && (
+          <div
+            ref={dropdownRef}
+            id="profile-dropdown"
+            className="absolute top-12 right-0 bg-white text-black shadow-lg rounded-lg p-4 w-60 z-50"
+          >
+            <p className="font-semibold">{user.name}</p>
+            <p className="text-sm text-gray-600 mb-3">{user.email}</p>
+            <button
+              onClick={handleLogout}
+              className="w-full bg-red-600 text-white py-1.5 rounded hover:bg-red-700 transition"
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
 }
+
