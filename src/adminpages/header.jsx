@@ -9,7 +9,7 @@ export function Header() {
 
   const user = {
     name: "Admin",
-    email: "admin@example.com",
+    email: "admin@.com",
   };
 
   const handleClickOutside = (e) => {
