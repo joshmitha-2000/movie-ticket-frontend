@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileToast({ isOpen, onClose }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState({ name: "", email: "" });
@@ -11,11 +13,14 @@ export default function ProfileToast({ isOpen, onClose }) {
       const fetchProfile = async () => {
         try {
           const token = localStorage.getItem("token");
-          const response = await axios.get("https://ticketbooking-backend-sr3r.onrender.com/api/user/profile", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.get(
+            "https://ticketbooking-backend-sr3r.onrender.com/api/user/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
           setUser(response.data.user);
           setForm({ name: response.data.user.name, email: response.data.user.email });
         } catch (error) {
@@ -29,11 +34,15 @@ export default function ProfileToast({ isOpen, onClose }) {
   const handleUpdate = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put("https://ticketbooking-backend-sr3r.onrender.com/api/user/profile", form, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        "https://ticketbooking-backend-sr3r.onrender.com/api/user/profile",
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setUser(response.data.user);
       setEdit(false);
       alert("Profile updated!");
@@ -42,18 +51,34 @@ export default function ProfileToast({ isOpen, onClose }) {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    setUser(null);
+    setEdit(false);
+    onClose();
+    alert("Logged out successfully!");
+    navigate("/");
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-16 right-4 w-80 max-w-full sm:w-96 bg-gray-900 text-white p-4 rounded-lg shadow-lg z-50
-                    sm:top-20 sm:right-6
-                    md:right-8
-                    lg:right-12
-                    xl:right-16
-                    ">
+    <div
+      className="fixed top-16 right-4 w-80 max-w-full sm:w-96 bg-gray-900 text-white p-4 rounded-lg shadow-lg z-50
+                 sm:top-20 sm:right-6
+                 md:right-8
+                 lg:right-12
+                 xl:right-16"
+    >
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg sm:text-xl font-bold">Your Profile</h3>
-        <button onClick={onClose} className="text-sm text-red-400 hover:text-red-600 transition-colors">✖</button>
+        <button
+          onClick={onClose}
+          className="text-sm text-red-400 hover:text-red-600 transition-colors"
+        >
+          ✖
+        </button>
       </div>
 
       {user ? (
@@ -96,14 +121,26 @@ export default function ProfileToast({ isOpen, onClose }) {
             </>
           ) : (
             <>
-              <p className="text-sm sm:text-base"><strong>Name:</strong> {user.name}</p>
-              <p className="text-sm sm:text-base"><strong>Email:</strong> {user.email}</p>
-              <button
-                className="mt-4 text-blue-400 underline text-sm sm:text-base hover:text-blue-600 transition-colors"
-                onClick={() => setEdit(true)}
-              >
-                Edit Profile
-              </button>
+              <p className="text-sm sm:text-base">
+                <strong>Name:</strong> {user.name}
+              </p>
+              <p className="text-sm sm:text-base">
+                <strong>Email:</strong> {user.email}
+              </p>
+              <div className="mt-4 flex justify-between items-center">
+                <button
+                  className="text-blue-400 underline text-sm sm:text-base hover:text-blue-600 transition-colors"
+                  onClick={() => setEdit(true)}
+                >
+                  Edit Profile
+                </button>
+                <button
+                  className="text-red-500 text-sm sm:text-base hover:text-red-700 transition-colors"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
             </>
           )}
         </>
