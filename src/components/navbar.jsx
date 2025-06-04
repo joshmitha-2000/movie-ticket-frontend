@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaTicketAlt, FaUser } from "react-icons/fa";
+import { FaHome, FaTicketAlt, FaUser, FaFilm } from "react-icons/fa"; // <--- FaFilm added
 import { Link } from "react-router-dom";
 import ProfileToast from "../userpages/profile";
 
