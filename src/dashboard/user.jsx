@@ -2,41 +2,31 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import "swiper/css";
 
 export default function UserDashboard() {
+  const navigate=useNavigate()
   const [movies, setMovies] = useState([]);
-  const [showsByMovie, setShowsByMovie] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMoviesAndShows = async () => {
+    const fetchMovies = async () => {
       try {
         const res = await axios.get("https://ticketbooking-backend-sr3r.onrender.com/api/movies");
         setMovies(res.data);
-
-        const showsRequests = res.data.map((movie) =>
-          axios.get(`https://ticketbooking-backend-sr3r.onrender.com/api/movies/${movie.id}/shows`)
-        );
-
-        const showsResponses = await Promise.all(showsRequests);
-
-        const showsMap = {};
-        showsResponses.forEach((response, idx) => {
-          showsMap[res.data[idx].id] = response.data;
-        });
-
-        setShowsByMovie(showsMap);
       } catch (error) {
-        console.error("Error fetching movies or shows:", error);
+        console.error("Error fetching movies:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMoviesAndShows();
+    fetchMovies();
   }, []);
+
+  const truncate = (text, maxLength = 100) =>
+    text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
 
   if (loading) {
     return <div className="text-center text-white mt-10">Loading movies...</div>;
@@ -89,32 +79,19 @@ export default function UserDashboard() {
               </div>
             </Link>
 
-            {/* Shows info */}
+            {/* Short Description */}
             <div className="px-4 pb-2 text-sm text-gray-300 flex-grow">
-              <h4 className="font-semibold mb-1">Available Shows:</h4>
-              {showsByMovie[movie.id] && showsByMovie[movie.id].length > 0 ? (
-                <ul className="max-h-24 overflow-y-auto">
-                  {showsByMovie[movie.id].map((show) => (
-                    <li key={show.id} className="mb-1">
-                      <strong>Theatre:</strong> {show.theatre.name} <br />
-                      <strong>Showtime:</strong>{" "}
-                      {new Date(show.showTime).toLocaleString(undefined, {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No shows available.</p>
-              )}
+              {truncate(movie.description)}
             </div>
 
             <div className="px-4 pb-4">
-              <button className="mt-2 w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition">
-                Book Ticket
-              </button>
-            </div>
+    <button
+      onClick={() => navigate(`/user/movie/${movie.id}`)}
+      className="mt-2 w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+    >
+      Book Ticket
+    </button>
+  </div>
           </div>
         ))}
       </div>

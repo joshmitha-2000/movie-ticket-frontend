@@ -7,7 +7,7 @@ export default function AuthForm() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-600 px-4 py-8">
       <div className="bg-black shadow-lg rounded-lg flex flex-col md:flex-row w-full max-w-4xl overflow-hidden max-h-[90vh] md:max-h-[80vh]">
-        {/* Image container with flex and items-stretch to match form height */}
+        {/* Left image */}
         <div className="hidden md:flex md:w-1/2 items-stretch">
           <img
             src="https://img.freepik.com/free-photo/cinema-light-board-red-background_23-2148457856.jpg"
@@ -17,12 +17,12 @@ export default function AuthForm() {
           />
         </div>
 
-        {/* Form container */}
+        {/* Right form */}
         <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-10 overflow-y-auto flex flex-col justify-center bg-gray-800 rounded-b-lg md:rounded-r-lg md:rounded-bl-none">
           <div className="flex justify-center space-x-6 mb-8">
             <button
               onClick={() => setFormType('login')}
-              className={`py-3 px-6 sm:px-8 rounded-full font-semibold transition-colors duration-300 whitespace-nowrap ${
+              className={`py-3 px-6 sm:px-8 rounded-full font-semibold transition-colors duration-300 ${
                 formType === 'login'
                   ? 'bg-red-600 text-white shadow-lg'
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
@@ -32,7 +32,7 @@ export default function AuthForm() {
             </button>
             <button
               onClick={() => setFormType('register')}
-              className={`py-3 px-6 sm:px-8 rounded-full font-semibold transition-colors duration-300 whitespace-nowrap ${
+              className={`py-3 px-6 sm:px-8 rounded-full font-semibold transition-colors duration-300 ${
                 formType === 'register'
                   ? 'bg-red-600 text-white shadow-lg'
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
@@ -49,6 +49,7 @@ export default function AuthForm() {
   );
 }
 
+// ✅ Login Form Component
 function LoginForm() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
@@ -72,10 +73,12 @@ function LoginForm() {
 
       const data = await res.json();
       if (res.ok) {
+        // ✅ Store token and role
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.user.role);
         localStorage.setItem('userId', data.user._id || data.user.id);
 
+        // ✅ Redirect based on role
         if (data.user.role === 'ADMIN') {
           navigate('/admin/dashboard');
         } else {
@@ -85,7 +88,7 @@ function LoginForm() {
         setMessage(data.message || 'Login failed.');
       }
     } catch (err) {
-      setMessage('Server error.');
+      setMessage('Server error. Please try again.');
     }
   };
 
@@ -121,7 +124,8 @@ function LoginForm() {
   );
 }
 
-const RegisterForm = () => {
+// ✅ Register Form Component
+function RegisterForm() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -166,7 +170,7 @@ const RegisterForm = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage('✅ Registration successful! Please check your email for confirmation.');
+        setMessage('✅ Registration successful! Please check your email.');
         setFormData({
           name: '',
           email: '',
@@ -254,4 +258,4 @@ const RegisterForm = () => {
       </button>
     </form>
   );
-};
+}
