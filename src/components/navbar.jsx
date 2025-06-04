@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaFilm, FaTicketAlt, FaUser } from "react-icons/fa";
+import { FaHome, FaTicketAlt, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ProfileToast from "../userpages/profile";
 
@@ -19,10 +19,6 @@ export default function Navbar() {
           <li className="hover:underline cursor-pointer flex items-center gap-1">
             <FaHome />
             <Link to="/user/home">Home</Link>
-          </li>
-          <li className="hover:underline cursor-pointer flex items-center gap-1">
-            <FaFilm />
-            <Link to="/user/movies">Movies</Link>
           </li>
           <li className="hover:underline cursor-pointer flex items-center gap-1">
             <FaTicketAlt />
