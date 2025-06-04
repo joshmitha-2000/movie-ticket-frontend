@@ -10,11 +10,14 @@ export default function UserBookings() {
     const fetchBookings = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("https://ticketbooking-backend-sr3r.onrender.com/api/booking/my-bookings", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "https://ticketbooking-backend-sr3r.onrender.com/api/booking/my-bookings",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (Array.isArray(response.data)) {
           setBookings(response.data);
@@ -49,9 +52,15 @@ export default function UserBookings() {
               key={booking.id}
               className="p-4 sm:p-6 border border-gray-700 rounded-lg shadow-md bg-gray-800 hover:bg-gray-700 transition-colors"
             >
-              <p className="text-base sm:text-lg mb-1"><strong>Movie:</strong> {booking.show.movie.title}</p>
+              <p className="text-base sm:text-lg mb-1">
+                <strong>Movie:</strong> {booking.show.movie.title}
+              </p>
               <p className="text-sm sm:text-base mb-1">
-                <strong>Show Time:</strong> {booking.show.startTime || booking.show.time}
+                <strong>Show Time:</strong>{" "}
+                {new Date(booking.show.showTime).toLocaleString(undefined, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
               </p>
               <p className="text-sm sm:text-base mb-1">
                 <strong>Seats:</strong> {booking.seats.map((seat) => seat.seatNumber).join(", ")}
