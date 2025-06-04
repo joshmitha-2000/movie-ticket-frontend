@@ -55,13 +55,7 @@ export default function Navbar() {
           >
             <FaHome /> Home
           </Link>
-          <Link
-            to="/user/movies"
-            className="hover:underline flex items-center gap-2 text-lg"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <FaFilm /> Movies
-          </Link>
+
           <Link
             to="/user/bookings"
             className="hover:underline flex items-center gap-2 text-lg"
