@@ -5,7 +5,7 @@ import Navbar from "./components/navbar";
 import AuthForm from "./pages/authform";
 import UserHome from "./dashboard/user";
 import AdminDashboard from "./dashboard/admin";
-import ProtectedRoute from "./pages/protucted"; // Make sure this file name is correct!
+import ProtectedRoute from "./pages/protucted"; 
 import { AppSidebar } from "./adminpages/sidebar";
 import { Header } from "./adminpages/header";
 import MovieManager from "./adminpages/movie";
