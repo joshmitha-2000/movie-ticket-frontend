@@ -5,7 +5,8 @@ export default function AdminBookingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = 'https://ticketbooking-backend-sr3r.onrender.com/api/booking/all-bookings';
+  const API_URL =
+    'https://ticketbooking-backend-sr3r.onrender.com/api/booking/all-bookings';
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function AdminBookingPage() {
         }
 
         const data = await res.json();
+        console.log('Fetched Bookings:', data); 
         setBookings(data);
       } catch (err) {
         setError(err.message || 'Unknown error');
@@ -45,6 +47,7 @@ export default function AdminBookingPage() {
     return (
       <div className="text-red-600 text-center py-4">Loading bookings...</div>
     );
+
   if (error)
     return (
       <div className="text-red-600 text-center py-4">Error: {error}</div>
@@ -56,7 +59,6 @@ export default function AdminBookingPage() {
         Admin Booking Dashboard
       </h1>
 
-      {/* Responsive wrapper with horizontal scroll */}
       <div className="overflow-x-auto">
         <table
           className="min-w-full border-collapse border border-white text-sm md:text-base"
@@ -68,16 +70,13 @@ export default function AdminBookingPage() {
                 'Booking ID',
                 'User',
                 'Email',
-                'Movie',
-                'Theatre',
-                'Show Time',
-                'Seats',
+                'Movie Title',
                 'Total Price',
                 'Status',
+                'Created At',
               ].map((heading) => (
                 <th
                   key={heading}
-                  scope="col"
                   className="border border-white px-2 py-1 md:px-4 md:py-2 text-left bg-gray-900"
                 >
                   {heading}
@@ -89,50 +88,43 @@ export default function AdminBookingPage() {
             {bookings.length === 0 && (
               <tr>
                 <td
-                  colSpan="9"
+                  colSpan="7"
                   className="text-center border border-white py-4 text-gray-400"
                 >
                   No bookings found
                 </td>
               </tr>
             )}
+
             {bookings.map((booking) => (
               <tr
-                key={booking.id}
+                key={booking.bookingId}
                 className="hover:bg-gray-700 transition-colors"
               >
                 <td className="border border-white px-2 py-1 md:px-4 md:py-2">
-                  {booking.id}
+                  {booking.bookingId}
                 </td>
                 <td className="border border-white px-2 py-1 md:px-4 md:py-2">
-                  {booking.user?.name || 'N/A'}
+                  {booking.userName || 'N/A'}
                 </td>
                 <td className="border border-white px-2 py-1 md:px-4 md:py-2">
-                  {booking.user?.email || 'N/A'}
+                  {booking.userEmail || 'N/A'}
                 </td>
                 <td className="border border-white px-2 py-1 md:px-4 md:py-2">
-                  {booking.show?.movie?.title || 'N/A'}
-                </td>
-                <td className="border border-white px-2 py-1 md:px-4 md:py-2">
-                  {booking.show?.theatre?.name || 'N/A'}
-                </td>
-                <td className="border border-white px-2 py-1 md:px-4 md:py-2">
-                  {booking.show?.showTime
-                    ? new Date(booking.show.showTime).toLocaleString()
-                    : 'N/A'}
-                </td>
-                <td className="border border-white px-2 py-1 md:px-4 md:py-2 whitespace-nowrap">
-                  {booking.seats?.length
-                    ? booking.seats.map((seat) => seat.seatNumber).join(', ')
-                    : 'N/A'}
+                  {booking.movieTitle || 'N/A'}
                 </td>
                 <td className="border border-white px-2 py-1 md:px-4 md:py-2">
                   {booking.totalPrice != null
-                    ? `$${booking.totalPrice.toFixed(2)}`
+                    ? `₹${booking.totalPrice.toFixed(2)}`
                     : 'N/A'}
                 </td>
                 <td className="border border-white px-2 py-1 md:px-4 md:py-2">
                   {booking.status || 'N/A'}
+                </td>
+                <td className="border border-white px-2 py-1 md:px-4 md:py-2">
+                  {booking.createdAt
+                    ? new Date(booking.createdAt).toLocaleString()
+                    : 'N/A'}
                 </td>
               </tr>
             ))}
